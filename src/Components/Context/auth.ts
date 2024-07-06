@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const initialAuthState: {token:string,userName:string} = {
+const initialAuthState: {token:string,userName:string,profilePhotoURL:string} = {
     token:localStorage.getItem('token') || "",
-    userName:''
+    userName:'',
+    profilePhotoURL:''
 }
 
 const authSlice = createSlice({
@@ -22,6 +23,9 @@ const authSlice = createSlice({
             state.token = "";
             localStorage.removeItem('token');
         },
+        setProfilePhotoURL(state, action){
+            state.profilePhotoURL = action.payload;
+        }   
     }
 })
 export default authSlice;

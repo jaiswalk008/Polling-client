@@ -35,7 +35,7 @@ const Signup = () => {
         try {
            const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'signup', userDetails);
            console.log(res.data)
-            // navigate('/login');
+            navigate('/login');
             setErrorMessage('');
         } catch (error: any) {
             console.error('Signup error:', error);

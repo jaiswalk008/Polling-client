@@ -8,6 +8,8 @@ import Login from './Components/User/Login.tsx'
 import { Provider, useSelector } from 'react-redux'
 import { store } from './Components/Context/store.ts'
 import App from './App.tsx'
+import Home from './Components/Polling/Home.tsx'
+import Profile from './Components/Profile/Profile.tsx'
 
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -30,6 +32,16 @@ const appRouter = createBrowserRouter([
         <App />
       </ProtectedRoute>
     ),
+    children:[
+     {
+      path:'/',
+      element:<Home/>
+     },
+     {
+      path:'/profile',
+      element:<Profile/>
+     }
+    ]
   
   },
 ]);

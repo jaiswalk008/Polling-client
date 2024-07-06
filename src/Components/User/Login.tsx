@@ -29,7 +29,8 @@ const Login = () => {
             setErrorMessage('');
             dispatch(authActions.setToken(res.data.token));
             dispatch(authActions.setUserName(res.data.userName));
-
+            dispatch(authActions.setProfilePhotoURL(res.data.profilePhotoURL))
+            navigate('/');
          
             
         } catch (err:any) {
