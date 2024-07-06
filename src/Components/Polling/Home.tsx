@@ -10,14 +10,14 @@ import { Poll } from '../Context/poll';
 
 const Home= () => {
   const dispatch = useDispatch();
-  const {polls} = useSelector((state:any) => state.polls) ;
+  const {poll} = useSelector((state:any) => state.polls) ;
   const {token} = useSelector((state:any) => state.auth) ;
   const fetchPollData = useCallback(async () =>{
     const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'poll',
       {headers:{Authorization:token}}
     );
     console.log(res.data)
-    dispatch(pollActions.setPolls(res.data));
+    dispatch(pollActions.setPoll(res.data));
   },[])
 
   useEffect(() =>{
@@ -28,15 +28,16 @@ const Home= () => {
     <div>
       <Header/>
       <CreatePoll/>
-      {polls.map((element: Poll, index: number) => (
+      {poll.map((element: Poll) => (
         <PollFeed
           hasVoted = {element.hasVoted}
-          key={index} // Ensure each component has a unique key prop
+          key={element._id} 
+          pollId= {element._id}
           question={element.question}
           options={element.options}
           userName={element.userId.name}
           profilePhotoURL= {element.userId.profilePhotoURL}
-
+          latestComment={element.latestComment}
         />
       ))}
     </div>

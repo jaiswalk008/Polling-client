@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Comment } from "../Comment/CommentSection";
 
 export interface Option {
     _id:string;
@@ -10,6 +11,7 @@ export interface Option {
 
 export interface Poll {
   _id: string;
+  latestComment:Comment
   question: string;
   hasVoted: boolean;
   options: Option[];
@@ -21,23 +23,23 @@ export interface Poll {
 
 
 interface PollState {
-  polls: Poll[];
+  poll: Poll[];
 }
 
 const initialState: PollState = {
-  polls: [],
+  poll: [],
 };
 
 const pollSlice = createSlice({
-  name: "polls",
+  name: "poll",
   initialState,
   reducers: {
-    setPolls(state, action: PayloadAction<Poll[]>) {
-      state.polls = action.payload;
+    setPoll(state, action: PayloadAction<Poll[]>) {
+      state.poll = action.payload;
     },
     addVote(state, action: PayloadAction<{ pollId: string; optionId: string }>) {
       const { pollId, optionId } = action.payload;
-      const poll = state.polls.find((poll) => poll._id === pollId);
+      const poll = state.poll.find((poll) => poll._id === pollId);
       if (poll) {
         const option = poll.options.find((option) => option._id === optionId);
         if (option) {
@@ -45,8 +47,9 @@ const pollSlice = createSlice({
         }
       }
     },
-    addToPolls(state, action: PayloadAction<Poll>) {
-      state.polls.push(action.payload);
+    addToPoll(state, action: PayloadAction<Poll>) {
+      console.log(action.payload);
+      state.poll.unshift(action.payload);
     },
   },
 });

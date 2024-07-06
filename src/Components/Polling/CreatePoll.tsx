@@ -14,7 +14,7 @@ const CreatePoll = ()=>{
                 <img className="profile-photo" src={profilePhotoURL} alt="profile-photo"/>
                 <div className=" create-poll">Create a poll</div>
             </div>}
-            {showPollForm && <PollForm onCancel={()=>showPollFormHandler}/>}
+            {showPollForm && <PollForm onCancel={showPollFormHandler}/>}
         </div>
     )
 }

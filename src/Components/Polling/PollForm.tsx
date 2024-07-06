@@ -9,14 +9,14 @@ const PollForm= (props:any) => {
   const [choices, setChoices] = useState<string[]>(['', '', '', '']);
 
   const dispatch = useDispatch();
-  const {token} = useSelector((state:any)=>state.auth)
+  const {token,profilePhotoURL,userName} = useSelector((state:any)=>state.auth)
   const handleChoiceChange = (index: number, value: string) => {
     const newChoices = [...choices];
     newChoices[index] = value;
     setChoices(newChoices);
   };
 
- 
+  
   const handleQuestionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuestion(e.target.value);
   };
@@ -26,19 +26,16 @@ const PollForm= (props:any) => {
   .filter(text => text.length > 0) 
   .map(text => ({ text, count: 0 }));
 
-
-    console.log(options )
     const pollData = {
       question,
       options,
-     
     }
     const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'poll',pollData,{
       headers:{Authorization:token}
     })
-    console.log(res.data)
-    dispatch(pollActions.addToPolls(res.data))
-    props.onCancel(false)
+    props.onCancel(false);
+    
+    dispatch(pollActions.addToPoll({...res.data , userId:{name:userName , profilePhotoURL}}));
   }
  
 
@@ -60,7 +57,7 @@ const PollForm= (props:any) => {
     
       <div className='d-flex'>
       <button onClick={onCreatePoll} className='btn btn-light w-100 mt-2 me-2'>Create Poll</button>
-      <button onClick={props.onCancel(false)} className='btn btn-danger w-100 mt-2 '>Cancel</button>
+      <button onClick={()=>props.onCancel(false)} className='btn btn-danger w-100 mt-2 '>Cancel</button>
 
       </div>
     </div>

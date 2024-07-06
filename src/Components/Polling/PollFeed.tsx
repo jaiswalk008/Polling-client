@@ -4,20 +4,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { pollActions } from '../Context/store';
 import axios from 'axios';
 import { Option } from '../Context/poll';
+import CommentSection, { Comment } from '../Comment/CommentSection';
 
 interface PollFeedProps {
+  pollId:string;
   hasVoted: boolean;
   question: string;
   options: Option[];
   userName: string;
   profilePhotoURL: string;
+  latestComment:Comment
 }
 
-const PollFeed: React.FC<PollFeedProps> = ({ question, options, hasVoted, userName, profilePhotoURL }) => {
+const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted, userName, profilePhotoURL, latestComment }) => {
   const dispatch = useDispatch();
   const [canVote, setCanVote] = useState(hasVoted);
   const { token } = useSelector((state: any) => state.auth);
-  const [showPollResults, setShowPollResults] = useState(false);
   const handleVote = async (optionId: string, pollId: string) => {
     if (!hasVoted) {
       await axios.patch(`${import.meta.env.VITE_BACKEND_URL}poll`, { optionId, pollId }, { headers: { Authorization: token } });
@@ -60,7 +62,7 @@ const PollFeed: React.FC<PollFeedProps> = ({ question, options, hasVoted, userNa
         <div className="votes">Total Votes: {totalVotes}</div>
         
       </div>
-      
+      <CommentSection pollId={pollId} latestComment={[{...latestComment}]}/>
     </div>
   );
 };
