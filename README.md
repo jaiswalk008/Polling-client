@@ -16,7 +16,7 @@ npm install
 
 4. **Start the development server**:
 ```bash
-npm run dev
+npm start
 ```
 
 ## Environment Variables
@@ -24,6 +24,6 @@ npm run dev
 To run this project, you will need to add the following environment variable to your `.env` file:
 
 ```
-VITE_APP_BACKEND_URL=http://localhost:4000
+REACT_APP_BACKEND_URL=http://localhost:4000/
 ```
 Please make sure to replace http://localhost:4000 with the actual Backend URL of your app and after updating the environment variable you need to restart the server.
