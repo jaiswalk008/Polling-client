@@ -9,12 +9,14 @@ export interface Comment{
   content:string;
   _id:string;
 }
+declare const REACT_APP_BACKEND_URL: string;
 
 const CommentSection = (props: any) => {
-  
+
   const [comments, setComments] = useState<Comment[]>(props.comments);
   const [newComment, setNewComment] = useState<string>('');
   const { token, userName } = useSelector((state: any) => state.auth);
+  const url:string = process.env.REACT_APP_BACKEND_URL as string;
 
   const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
     setNewComment(event.target.value);
@@ -31,7 +33,7 @@ const CommentSection = (props: any) => {
     };
   
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}comment`, commentObject, {
+      const res = await axios.post(`${url}comment`, commentObject, {
         headers: { Authorization: token },
       });
       props.socket.emit('newComment', { ...res.data, author: userName } )

@@ -7,16 +7,19 @@ import { authActions } from "../Context/store";
 import PollFeed from "../Polling/PollFeed";
 import { Poll } from "../Context/poll";
 import useSocket from "../Hooks/useSocket";
+
+
 const ProfilePage = () => {
   const [userData, setUserData] = useState<any>({});
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { token , profilePhotoURL} = useSelector((state: any) => state.auth);
   const socket = useSocket();
+  const url:string = process.env.REACT_APP_BACKEND_URL as string;
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(import.meta.env.VITE_BACKEND_URL, {
+        const response = await axios.get(url , {
           headers: {
             Authorization: token,
           },
@@ -42,7 +45,7 @@ const ProfilePage = () => {
       if (selectedFile) {
         formData.append("profilePhoto", selectedFile);
         const response = await axios.post(
-          import.meta.env.VITE_BACKEND_URL + "profilePhoto",
+          process.env.REACT_APP_BACKEND_URL + "profilePhoto",
           formData,
           {
             headers: {

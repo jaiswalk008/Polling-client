@@ -15,7 +15,7 @@ const Home= () => {
   const {token} = useSelector((state:any) => state.auth) ;
   
   const fetchPollData = useCallback(async () =>{
-    const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'poll',
+    const res = await axios.get(process.env.REACT_APP_BACKEND_URL+'poll',
       {headers:{Authorization:token}}
     );
     dispatch(pollActions.setPoll(res.data));

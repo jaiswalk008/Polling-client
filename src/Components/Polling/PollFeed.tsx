@@ -29,6 +29,7 @@ const PollFeed: React.FC<PollFeedProps> = ({
   showAllComments,
   socket,
 }) => {
+  const url:string = process.env.REACT_APP_BACKEND_URL as string;
   
   const [canVote, setCanVote] = useState(!hasVoted);
   const { token } = useSelector((state: any) => state.auth);
@@ -37,7 +38,7 @@ const PollFeed: React.FC<PollFeedProps> = ({
   const handleVote = async (optionId: string, pollId: string) => {
     if (canVote) {
       socket.emit('vote', { pollId, optionId });
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}poll`, { optionId, pollId }, { headers: { Authorization: token } });
+      await axios.patch(`${url}poll`, { optionId, pollId }, { headers: { Authorization: token } });
 
       setCanVote(false);
     }

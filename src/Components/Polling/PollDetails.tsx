@@ -13,7 +13,7 @@ const PollDetails = () => {
     useEffect(() => {
         const fetchPollDetails = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}poll/${pollId}`); 
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}poll/${pollId}`); 
                 setPoll(response.data);
             } catch (error) {
                 console.log(error)

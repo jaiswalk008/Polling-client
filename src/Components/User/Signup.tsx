@@ -10,6 +10,7 @@ const Signup = () => {
     const [password, setPassword] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const navigate = useNavigate();
+    const url:string = process.env.REACT_APP_BACKEND_URL as string;
 
     const emailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
@@ -33,7 +34,7 @@ const Signup = () => {
         };
 
         try {
-           await axios.post(import.meta.env.VITE_BACKEND_URL+'signup', userDetails);
+           await axios.post(url+'signup', userDetails);
             navigate('/login');
             setErrorMessage('');
         } catch (error: any) {

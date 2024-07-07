@@ -16,6 +16,7 @@ const PollForm= (props:any) => {
     setChoices(newChoices);
   };
 
+  const url:string = process.env.REACT_APP_BACKEND_URL as string;
   
   const handleQuestionChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuestion(e.target.value);
@@ -30,7 +31,7 @@ const PollForm= (props:any) => {
       question,
       options,
     }
-    const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'poll',pollData,{
+    const res = await axios.post(url+'poll',pollData,{
       headers:{Authorization:token}
     })
     props.onCancel(false);

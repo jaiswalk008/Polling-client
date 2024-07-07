@@ -17,6 +17,8 @@ const Login = () => {
     const emailChangeHandler = (e:ChangeEvent<HTMLInputElement>) =>{
         setEmail(e.target.value);
     }
+  const url:string = process.env.REACT_APP_BACKEND_URL as string;
+    console.log(url)
     const passwordChangeHandler = (e:ChangeEvent<HTMLInputElement>) => {setPassword (e.target.value)}
     const loginHandler = async (e:FormEvent) =>{
         e.preventDefault();
@@ -24,7 +26,7 @@ const Login = () => {
            email,password
         }
         try {
-            const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'login/', userDetails);
+            const res = await axios.post(url+'login/', userDetails);
             setErrorMessage('');
             dispatch(authActions.setToken(res.data.token));
             dispatch(authActions.setUserName(res.data.userName));
