@@ -25,7 +25,6 @@ const Login = () => {
         }
         try {
             const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'login/', userDetails);
-            console.log(res.data);
             setErrorMessage('');
             dispatch(authActions.setToken(res.data.token));
             dispatch(authActions.setUserName(res.data.userName));

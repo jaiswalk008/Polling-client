@@ -18,7 +18,6 @@ const Home= () => {
     const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'poll',
       {headers:{Authorization:token}}
     );
-    console.log(res.data)
     dispatch(pollActions.setPoll(res.data));
   },[])
   const socket = useSocket();

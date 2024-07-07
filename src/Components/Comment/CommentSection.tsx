@@ -1,9 +1,8 @@
-import React, { useState, ChangeEvent, FormEvent, useCallback, useEffect } from 'react';
+import  { useState, ChangeEvent, FormEvent, useCallback, useEffect } from 'react';
 import './CommentSection.css'; // Import CSS file for styling
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import useSocket from '../Hooks/useSocket';
 
 export interface Comment{
   author:string;
@@ -30,12 +29,11 @@ const CommentSection = (props: any) => {
       content: newComment,
       pollId: props.pollId,
     };
-    console.log(commentObject)
+  
     try {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}comment`, commentObject, {
         headers: { Authorization: token },
       });
-      console.log(res.data)
       props.socket.emit('newComment', { ...res.data, author: userName } )
 
  
@@ -48,7 +46,7 @@ const CommentSection = (props: any) => {
   useEffect(() =>{
     
     props.socket.on('newComment', (comment:any) =>{
-      console.log(comment)
+      
       if(props.pollId === comment.pollId) setComments([...comments, comment]);
     })
   })

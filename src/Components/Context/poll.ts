@@ -48,7 +48,6 @@ const pollSlice = createSlice({
       }
     },
     addToPoll(state, action: PayloadAction<Poll>) {
-      console.log(action.payload);
       state.poll.unshift(action.payload);
     }
     

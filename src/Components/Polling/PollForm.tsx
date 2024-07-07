@@ -33,7 +33,6 @@ const PollForm= (props:any) => {
     const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'poll',pollData,{
       headers:{Authorization:token}
     })
-    // console.log(res.data)
     props.onCancel(false);
     
     dispatch(pollActions.addToPoll({...res.data ,comments:[], userId:{name:userName , profilePhotoURL}}));

@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './Polling.css'; // Import your CSS file for styling
-import { useDispatch, useSelector } from 'react-redux';
-import { pollActions } from '../Context/store';
+import {  useSelector } from 'react-redux';
 import axios from 'axios';
 import { Option } from '../Context/poll';
 import CommentSection, { Comment } from '../Comment/CommentSection';
@@ -30,7 +29,7 @@ const PollFeed: React.FC<PollFeedProps> = ({
   showAllComments,
   socket,
 }) => {
-  const dispatch = useDispatch();
+  
   const [canVote, setCanVote] = useState(!hasVoted);
   const { token } = useSelector((state: any) => state.auth);
   const [updatedOptions, setUpdatedOptions] = useState(options);
@@ -38,7 +37,7 @@ const PollFeed: React.FC<PollFeedProps> = ({
   const handleVote = async (optionId: string, pollId: string) => {
     if (canVote) {
       socket.emit('vote', { pollId, optionId });
-      // await axios.patch(`${import.meta.env.VITE_BACKEND_URL}poll`, { optionId, pollId }, { headers: { Authorization: token } });
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}poll`, { optionId, pollId }, { headers: { Authorization: token } });
 
       setCanVote(false);
     }

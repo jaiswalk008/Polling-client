@@ -33,8 +33,7 @@ const Signup = () => {
         };
 
         try {
-           const res = await axios.post(import.meta.env.VITE_BACKEND_URL+'signup', userDetails);
-           console.log(res.data)
+           await axios.post(import.meta.env.VITE_BACKEND_URL+'signup', userDetails);
             navigate('/login');
             setErrorMessage('');
         } catch (error: any) {

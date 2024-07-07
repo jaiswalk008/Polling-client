@@ -21,7 +21,6 @@ const ProfilePage = () => {
             Authorization: token,
           },
         });
-        console.log(response.data);
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -40,7 +39,6 @@ const ProfilePage = () => {
   const handleUploadPhoto = async () => {
     try {
       const formData = new FormData();
-      console.log(selectedFile);
       if (selectedFile) {
         formData.append("profilePhoto", selectedFile);
         const response = await axios.post(
@@ -54,8 +52,6 @@ const ProfilePage = () => {
           }
         );
         dispatch(authActions.setProfilePhotoURL(response.data.profilePhotoURL));
-        // console.log('Photo uploaded:', response.data);
-        // Optionally, update user data or display a success message
       }
     } catch (error) {
       console.error("Error uploading photo:", error);
