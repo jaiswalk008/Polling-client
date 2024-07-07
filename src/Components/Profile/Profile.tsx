@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import "./Profile.css";
 import Header from "../Polling/Header";
 import { authActions } from "../Context/store";
+import PollFeed from "../Polling/PollFeed";
+import { Poll } from "../Context/poll";
 const ProfilePage = () => {
   const [userData, setUserData] = useState<any>({});
-  const { profilePhotoURL } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { token } = useSelector((state: any) => state.auth);
+  const { token , profilePhotoURL} = useSelector((state: any) => state.auth);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -18,6 +19,7 @@ const ProfilePage = () => {
             Authorization: token,
           },
         });
+        console.log(response.data);
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -77,7 +79,21 @@ const ProfilePage = () => {
       </div>
       <div className="container">
         <h3 >Your Polls</h3>
-        
+       
+        {
+        userData?.polls?.map((element:Poll) =>{
+          return <PollFeed
+          hasVoted = {true}
+          key={element._id} 
+          pollId= {element._id}
+          question={element.question}
+          options={element.options}
+          userName={userData.name}
+          profilePhotoURL= {profilePhotoURL}
+          comments={element.comments}
+          showAllComments={true}
+        />
+        })}
       </div>
     </>
   );

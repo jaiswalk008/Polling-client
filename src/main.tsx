@@ -10,6 +10,7 @@ import { store } from './Components/Context/store.ts'
 import App from './App.tsx'
 import Home from './Components/Polling/Home.tsx'
 import Profile from './Components/Profile/Profile.tsx'
+import PollDetails from './Components/Polling/PollDetails.tsx'
 
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -38,9 +39,14 @@ const appRouter = createBrowserRouter([
       element:<Home/>
      },
      {
+      path:'/:pollId',
+      element:<PollDetails/>
+     },
+     {
       path:'/profile',
       element:<Profile/>
-     }
+     },
+
     ]
   
   },

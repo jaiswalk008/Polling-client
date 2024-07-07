@@ -11,7 +11,7 @@ export interface Option {
 
 export interface Poll {
   _id: string;
-  latestComment:Comment
+  comments:Comment[]
   question: string;
   hasVoted: boolean;
   options: Option[];

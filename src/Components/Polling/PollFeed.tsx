@@ -13,10 +13,11 @@ interface PollFeedProps {
   options: Option[];
   userName: string;
   profilePhotoURL: string;
-  latestComment:Comment
+  comments:Comment[],
+  showAllComments:boolean
 }
 
-const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted, userName, profilePhotoURL, latestComment }) => {
+const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted, userName, profilePhotoURL, comments,showAllComments }) => {
   const dispatch = useDispatch();
   const [canVote, setCanVote] = useState(hasVoted);
   const { token } = useSelector((state: any) => state.auth);
@@ -62,7 +63,7 @@ const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted,
         <div className="votes">Total Votes: {totalVotes}</div>
         
       </div>
-      <CommentSection pollId={pollId} latestComment={[{...latestComment}]}/>
+      <CommentSection pollId={pollId} showAllComments={showAllComments} comments={comments}/>
     </div>
   );
 };

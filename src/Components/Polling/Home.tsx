@@ -37,7 +37,8 @@ const Home= () => {
           options={element.options}
           userName={element.userId.name}
           profilePhotoURL= {element.userId.profilePhotoURL}
-          latestComment={element.latestComment}
+          comments={element.comments}
+          showAllComments={false}
         />
       ))}
     </div>
