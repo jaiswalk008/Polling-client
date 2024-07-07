@@ -3,12 +3,13 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Header from "./Header";
 import PollFeed from "./PollFeed";
+import useSocket from "../Hooks/useSocket";
 
 const PollDetails = () => {
     const { pollId } = useParams();
     const [poll, setPoll] = useState<any>({});
     
-
+    const socket = useSocket();
     useEffect(() => {
         const fetchPollDetails = async () => {
             try {
@@ -37,6 +38,7 @@ const PollDetails = () => {
             profilePhotoURL= {poll?.poll?.userId?.profilePhotoURL}
             comments={poll?.comments}
             showAllComments={true}
+            socket={socket}
             />}
         </>
     );

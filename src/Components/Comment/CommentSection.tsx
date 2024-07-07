@@ -3,6 +3,7 @@ import './CommentSection.css'; // Import CSS file for styling
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import useSocket from '../Hooks/useSocket';
 
 export interface Comment{
   author:string;
@@ -11,22 +12,7 @@ export interface Comment{
 }
 
 const CommentSection = (props: any) => {
-  // useEffect(() => {
-  //   const fetchComments = async () => {
-  //     try {
-  //       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}comments/${props.pollId}`, {
-  //         headers: { Authorization: token },
-  //       });
-  //       setComments(response.data);
-       
-  //     } catch (err) {
-  //       console.error('Error fetching comments:', err);
-       
-  //     }
-  //   };
-
-  //   fetchComments();
-  // }, [props.pollId, token]);
+  
   const [comments, setComments] = useState<Comment[]>(props.comments);
   const [newComment, setNewComment] = useState<string>('');
   const { token, userName } = useSelector((state: any) => state.auth);
@@ -34,7 +20,7 @@ const CommentSection = (props: any) => {
   const handleCommentChange = (event: ChangeEvent<HTMLTextAreaElement>): void => {
     setNewComment(event.target.value);
   };
-
+  // const socket = useSocket();
   const handleCommentSubmit = useCallback(async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
@@ -50,14 +36,23 @@ const CommentSection = (props: any) => {
         headers: { Authorization: token },
       });
       console.log(res.data)
-      setComments([...comments, { ...res.data, author: userName }]);
-      console.log(comments);
+      props.socket.emit('newComment', { ...res.data, author: userName } )
+
+ 
       setNewComment('');
     } catch (error) {
       console.error('Error posting comment:', error);
     }
   }, [newComment, comments, props.pollId, token, userName]);
-  console.log(comments)
+  
+  useEffect(() =>{
+    
+    props.socket.on('newComment', (comment:any) =>{
+      console.log(comment)
+      if(props.pollId === comment.pollId) setComments([...comments, comment]);
+    })
+  })
+
   return (
     <div className="comment-section">
       <h5>Comments</h5>

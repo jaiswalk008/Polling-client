@@ -6,11 +6,13 @@ import Header from "../Polling/Header";
 import { authActions } from "../Context/store";
 import PollFeed from "../Polling/PollFeed";
 import { Poll } from "../Context/poll";
+import useSocket from "../Hooks/useSocket";
 const ProfilePage = () => {
   const [userData, setUserData] = useState<any>({});
   const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { token , profilePhotoURL} = useSelector((state: any) => state.auth);
+  const socket = useSocket();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -77,7 +79,7 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      <div className="container">
+      <div className="container-fluid">
         <h3 >Your Polls</h3>
        
         {
@@ -92,6 +94,7 @@ const ProfilePage = () => {
           profilePhotoURL= {profilePhotoURL}
           comments={element.comments}
           showAllComments={true}
+          socket={socket}
         />
         })}
       </div>

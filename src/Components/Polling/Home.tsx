@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { pollActions } from '../Context/store';
 import { Poll } from '../Context/poll';
+import useSocket from '../Hooks/useSocket';
 
 
 const Home= () => {
   const dispatch = useDispatch();
   const {poll} = useSelector((state:any) => state.polls) ;
   const {token} = useSelector((state:any) => state.auth) ;
+  
   const fetchPollData = useCallback(async () =>{
     const res = await axios.get(import.meta.env.VITE_BACKEND_URL+'poll',
       {headers:{Authorization:token}}
@@ -19,11 +21,24 @@ const Home= () => {
     console.log(res.data)
     dispatch(pollActions.setPoll(res.data));
   },[])
-
+  const socket = useSocket();
   useEffect(() =>{
     fetchPollData();
   },[])
+  
+  useEffect(() =>{
+  
+    socket.on('connect' , () =>{
+      console.log(socket.id);
+    })
+    
 
+    return () =>{
+      socket.off('connet',() =>{
+        console.log(socket.id);
+      })      
+    }
+  },[socket])
   return (
     <div>
       <Header/>
@@ -39,6 +54,7 @@ const Home= () => {
           profilePhotoURL= {element.userId.profilePhotoURL}
           comments={element.comments}
           showAllComments={false}
+          socket={socket}
         />
       ))}
     </div>

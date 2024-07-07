@@ -1,35 +1,68 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './Polling.css'; // Import your CSS file for styling
 import { useDispatch, useSelector } from 'react-redux';
 import { pollActions } from '../Context/store';
 import axios from 'axios';
 import { Option } from '../Context/poll';
 import CommentSection, { Comment } from '../Comment/CommentSection';
+import { Socket } from 'socket.io-client';
 
 interface PollFeedProps {
-  pollId:string;
+  pollId: string;
   hasVoted: boolean;
   question: string;
   options: Option[];
   userName: string;
   profilePhotoURL: string;
-  comments:Comment[],
-  showAllComments:boolean
+  comments: Comment[];
+  showAllComments: boolean;
+  socket: Socket;
 }
 
-const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted, userName, profilePhotoURL, comments,showAllComments }) => {
+const PollFeed: React.FC<PollFeedProps> = ({
+  pollId,
+  question,
+  options,
+  hasVoted,
+  userName,
+  profilePhotoURL,
+  comments,
+  showAllComments,
+  socket,
+}) => {
   const dispatch = useDispatch();
-  const [canVote, setCanVote] = useState(hasVoted);
+  const [canVote, setCanVote] = useState(!hasVoted);
   const { token } = useSelector((state: any) => state.auth);
+  const [updatedOptions, setUpdatedOptions] = useState(options);
+
   const handleVote = async (optionId: string, pollId: string) => {
-    if (!hasVoted) {
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}poll`, { optionId, pollId }, { headers: { Authorization: token } });
-      dispatch(pollActions.addVote({ pollId, optionId }));
-      setCanVote(true);
+    if (canVote) {
+      socket.emit('vote', { pollId, optionId });
+      // await axios.patch(`${import.meta.env.VITE_BACKEND_URL}poll`, { optionId, pollId }, { headers: { Authorization: token } });
+
+      setCanVote(false);
     }
   };
 
-  const totalVotes = useMemo(() => options.reduce((acc, curr) => acc + curr.count, 0), [options]);
+  useEffect(() => {
+    const handleVoteEvent = (data: any) => {
+      if (pollId === data.pollId) {
+        setUpdatedOptions((prevOptions) =>
+          prevOptions.map((option) =>
+            option._id === data.optionId ? { ...option, count: option.count + 1 } : option
+          )
+        );
+      }
+    };
+
+    socket.on('vote', handleVoteEvent);
+
+    return () => {
+      socket.off('vote', handleVoteEvent);
+    };
+  }, [pollId, socket]);
+
+  const totalVotes = useMemo(() => updatedOptions.reduce((acc, curr) => acc + curr.count, 0), [updatedOptions]);
 
   return (
     <div className="container mt-3 poll-feed">
@@ -39,10 +72,10 @@ const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted,
       </div>
       <div className="question">
         <p>Q. {question}</p>
-        {options.map((option) => (
+        {updatedOptions.map((option) => (
           <div key={option._id} onClick={() => handleVote(option._id, option.pollId)} className="option">
             {option.text}
-            {canVote && (
+            {!canVote && (
               <div className="progress">
                 <div
                   className="progress-bar"
@@ -61,9 +94,8 @@ const PollFeed: React.FC<PollFeedProps> = ({pollId, question, options, hasVoted,
       </div>
       <div className='d-flex'>
         <div className="votes">Total Votes: {totalVotes}</div>
-        
       </div>
-      <CommentSection pollId={pollId} showAllComments={showAllComments} comments={comments}/>
+      <CommentSection socket={socket} pollId={pollId} showAllComments={showAllComments} comments={comments} />
     </div>
   );
 };
